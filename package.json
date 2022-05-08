@@ -1,0 +1,12 @@
+{
+  "name": "capstoneproject-2",
+  "version": "1.0.0",
+  "description": "Node js Capstone Project 2. A Node.js REST API with MySQL, Express, JWT authentications and Cloudinary as external storage",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "Group 14",
+  "license": "ISC"
+}
