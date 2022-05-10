@@ -12,13 +12,23 @@ class User{
 		this.address = address;
 		this.is_admin = is_admin;
 	}
-}
 
 //create
+  static createUser(newUser, result) {
+    db.query(`INSERT INTO [table] VALUES(?, ?, ?, ?, ?, ?, ?, ?)`, [newUser.id, newUser.email, newUser.first_name, newUser.last_name, newUser.password, newUser.phone, newUser.address, newUser.is_admin], (err, res) => {
+      if(err) {
+        console.log('error: ', err)
+        result(err, null)
+        return
+      }
+      console.log('Created user: ', { ...newUser })
+      result(null, { id: res.insertId, ...newUser })
+    })
+  }
 
 //get all
 
 //find by id
 
-
-modules.exports = User;
+}
+module.exports = User;
