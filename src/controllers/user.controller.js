@@ -86,13 +86,93 @@ exports.signIn = (req, res)=> {
 					status: "error",
 					error: err.sqlMessage || err.message || "Can't find user with these credentials"
 				});
-			} else if (bcrypt.compareSync(data.password, hash)) {
+			} else if (!bcrypt.compareSync(password, data.password)) {
 				res.status(400).send({
 					status: "error",
 					error: "Invalid username or password"
 				});
 			} else {
 				res.send(data);
+			};
+		});
+	} else {
+		res.status(400).send({
+			status: "error",
+			error: "Incomplete credentials!"
+		});
+	}
+
+};
+
+// Password reset for existing user
+exports.resetPassword = (req, res)=> {
+	if (!req.body) {
+		res.status(400).send({
+			message: "Content cannot be empty!"
+		});
+	};
+
+	const { email, current_password, new_password, phone_number } = req.body;
+
+	
+	if (email && current_password) {
+		User.findByEmail(email, (err, data)=> {
+			if (err) {
+				res.status(500).send({
+					status: "error",
+					error: err.sqlMessage || err.message || "Can't find user with these credentials"
+				});
+			} else if (!bcrypt.compareSync(current_password, data.password)) {
+				res.status(400).send({
+					status: "error",
+					error: "Invalid username or password"
+				});
+			} else {
+				// update password
+
+				// hash password
+				const salt = bcrypt.genSaltSync(10);
+				const hash = bcrypt.hashSync(new_password, salt);
+				User.updatePasswordByEmail(email, hash, (error, updatedData)=> {
+					if (err) {
+						res.status(500).send({
+							status: "error",
+							error: err.sqlMessage || err.message || "Could not update password"
+						});
+					} else {
+						res.send(data);
+					}
+				});
+			};
+		});
+	} else if (phone_number && current_password){
+		User.findByPhoneNumber(phone_number, (err, data)=> {
+			if (err) {
+				res.status(500).send({
+					status: "error",
+					error: err.sqlMessage || err.message || "Can't find user with these credentials"
+				});
+			} else if (!bcrypt.compareSync(current_password, data.password)) {
+				res.status(400).send({
+					status: "error",
+					error: "Invalid username or password"
+				});
+			} else {
+				// update password
+
+				// hash password
+				const salt = bcrypt.genSaltSync(10);
+				const hash = bcrypt.hashSync(new_password, salt);
+				User.updatePasswordByPhoneNumber(phone_number, (error, updatedData)=> {
+					if (err) {
+						res.status(500).send({
+							status: "error",
+							error: err.sqlMessage || err.message || "Could not update password"
+						});
+					} else {
+						res.send(data);
+					}
+				});
 			};
 		});
 	} else {

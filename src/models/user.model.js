@@ -89,6 +89,46 @@ class User{
 			result({ message: "Not found" }, null );
 		});
 	};
+
+	// Password reset for user identified by email
+	static updatePasswordByEmail(email, password, result) {
+		db.query(`UPDATE users SET password = ? WHERE email = ?`, [password, email], (err, res) => {
+			console.log(res);
+			if (err) {
+				console.log('Error: ', err.sqlMessage || err.message);
+				result(err, null);
+				return;
+			};
+			if (res.length) {
+				console.log('Found user: ', res[0]);
+				result(null, res[0]);
+				return;	
+			};
+
+			// not found
+			result({ message: "Not found" }, null );
+		});
+	};
+
+	// Password reset for user identified by phone_number
+	static updatePasswordByPhoneNumber(phone_number, password, result) {
+		db.query(`UPDATE users SET password = ? WHERE phone_number = ?`, [password, phone_number], (err, res) => {
+			console.log(res);
+			if (err) {
+				console.log('Error: ', err.sqlMessage || err.message);
+				result(err, null);
+				return;
+			};
+			if (res.length) {
+				console.log('Found user: ', res[0]);
+				result(null, res[0]);
+				return;	
+			};
+
+			// not found
+			result({ message: "Not found" }, null );
+		});
+	};
 };
 
 

@@ -8,5 +8,8 @@ module.exports = app => {
 	// user sign in
 	router.post("/signin", userController.signIn);
 
+	// password reset
+	router.post("/reset-password", userController.resetPassword);
+
 	app.use('/api/v1/auth', router);
 };
