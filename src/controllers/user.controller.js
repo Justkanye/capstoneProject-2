@@ -5,6 +5,7 @@ const bcrypt = require('bcryptjs');
 exports.signUp = (req, res) => {
 	if (!req.body) {
 		res.status(400).send({
+			status: "error",
 			message: "Content cannot be empty!"
 		});
 	};
@@ -56,6 +57,7 @@ exports.signUp = (req, res) => {
 exports.signIn = (req, res)=> {
 	if (!req.body) {
 		res.status(400).send({
+			status: "error",
 			message: "Content cannot be empty!"
 		});
 	};
@@ -108,6 +110,7 @@ exports.signIn = (req, res)=> {
 exports.resetPassword = (req, res)=> {
 	if (!req.body) {
 		res.status(400).send({
+			status: "error",
 			message: "Content cannot be empty!"
 		});
 	};

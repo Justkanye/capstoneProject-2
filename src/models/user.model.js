@@ -4,10 +4,10 @@ const db = require('../config/db.config');
 const createUserTableCommand = `CREATE TABLE IF NOT EXISTS users(id INT AUTO_INCREMENT PRIMARY KEY NOT NULL, email VARCHAR(100) NOT NULL UNIQUE, first_name VARCHAR(100) NOT NULL, last_name VARCHAR(100) NOT NULL, password VARCHAR(255) NOT NULL, phone_number VARCHAR(15)NOT NULL UNIQUE, address VARCHAR(255) NOT NULL, is_admin BOOLEAN DEFAULT false)`;
 db.query(createUserTableCommand, function (err, res) {
 	if (err) {
-		console.log('Error: ',  err.sqlMessage || err.message || err);
+		console.log('An error occured while trying to create users table: ',  err.sqlMessage || err.message || err);
 		return;
 	}
-	if (!res.warningCount) console.log('User table successfully created.');
+	if (!res.warningCount) console.log('Users table successfully created.');
 });
 
 //Constructor
@@ -27,11 +27,11 @@ class User{
 		db.query(`INSERT INTO users VALUES(0,?,?,?,?,?,?,?)`, [newUser.email, newUser.first_name, newUser.last_name, newUser.password, newUser.phone, newUser.address, newUser.is_admin || false], (err, res) => {
 			if (err) {
 				console.log('Error: ', err.sqlMessage || err.message);
-				result(err, null);
+				result({ status: "error", message: err.sqlMessage || err.message }, null);
 				return;
 			}
 			console.log("New user created successfully!");
-			result(null, { status: "success", data: {id: res.insertId, ...newUser, is_admin: newUser.is_admin || false }});
+			this.findById(res.insertId, result);
 		})
 	}
 
@@ -40,12 +40,12 @@ class User{
 		db.query(`SELECT * FROM users`, (err, res) => {
 			if (err) {
 				console.log('Error: ', err.sqlMessage || err.message);
-				result(err, null);
+				result({ status: "error", message: err.sqlMessage || err.message }, null);
 				return;
 			}
 
 			console.log('Found users: ', res);
-			result(null, res);
+			result(null, { status: "success", data: res});
 			return;	
 		})
 	}
@@ -55,17 +55,17 @@ class User{
 		db.query(`SELECT * FROM users WHERE email = ?`, [email], (err, res) => {
 			if (err) {
 				console.log('Error: ', err.sqlMessage || err.message);
-				result(err, null);
+				result({ status: "error", message: err.sqlMessage || err.message }, null);
 				return;
 			};
 			if (res.length) {
 				console.log('Found user: ', res[0]);
-				result(null, res[0]);
+				result(null, { status: "success", data: res[0]});
 				return;	
 			};
 
 			// not found
-			result({ message: "Not found" }, null );
+			result({ status: "error", message: "Not found" }, null );
 		});
 	};
 
@@ -74,7 +74,7 @@ class User{
 		db.query(`SELECT * FROM users WHERE phone_number = ?`, [phone_number], (err, res) => {
 			if (err) {
 				console.log('Error: ', err.sqlMessage || err.message);
-				result(err, null);
+				result({ status: "error", message: err.sqlMessage || err.message }, null);
 				return;
 			};
 			if (res.length) {
@@ -94,12 +94,12 @@ class User{
 			console.log(res);
 			if (err) {
 				console.log('Error: ', err.sqlMessage || err.message);
-				result(err, null);
+				result({ status: "error", message: err.sqlMessage || err.message }, null);
 				return;
 			};
 			if (res.length) {
 				console.log('Found user: ', res[0]);
-				result(null, res[0]);
+				result(null, { status: "success", data: res[0]});
 				return;	
 			};
 
@@ -114,19 +114,35 @@ class User{
 			console.log(res);
 			if (err) {
 				console.log('Error: ', err.sqlMessage || err.message);
-				result(err, null);
+				result({ status: "error", message: err.sqlMessage || err.message }, null);
 				return;
 			};
 			if (res.length) {
 				console.log('Found user: ', res[0]);
-				result(null, res[0]);
+				result(null, { status: "success", data: res[0]});
 				return;	
 			};
 
 			// not found
-			result({ message: "Not found" }, null );
+			result({ status: "error", message: "Not found" }, null );
+			return;
 		});
 	};
+
+	// find by id
+	static findById(id, result) {
+		db.query(`SELECT * FROM users WHERE id = ?`,[id], (err, res) => {
+			if (err) {
+				console.log('Error: ', err.sqlMessage || err.message || err);
+				result({ status: "error", message: err.sqlMessage || err.message }, null);
+				return;
+			}
+
+			console.log('Found user: ', res[0]);
+			result(null, { status: "success", data: res[0]});
+			return;	
+		})
+	}
 };
 
 module.exports = User;
