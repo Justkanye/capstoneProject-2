@@ -2,9 +2,16 @@ const router = require('express').Router();
 const userController = require('../controllers/user.controller');
 
 module.exports = app => {
-  // POST /auth/signup API Endpoint specification
-  router.post('/signup', userController.create)
 
+	// user sign up
+	router.post("/signup", userController.signUp);
 
-app.use('/auth', router)
+	// user sign in
+	router.post("/signin", userController.signIn);
+
+	// password reset
+	router.post("/reset-password", userController.resetPassword);
+
+	app.use('/api/v1/auth', router);
+
 };
