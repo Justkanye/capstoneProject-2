@@ -4,7 +4,7 @@ const db = require('../config/db.config');
 const createUserTableCommand = `CREATE TABLE IF NOT EXISTS users(id INT AUTO_INCREMENT PRIMARY KEY NOT NULL, email VARCHAR(100) NOT NULL UNIQUE, first_name VARCHAR(100) NOT NULL, last_name VARCHAR(100) NOT NULL, password VARCHAR(255) NOT NULL, phone_number VARCHAR(15)NOT NULL UNIQUE, address VARCHAR(255) NOT NULL, is_admin BOOLEAN DEFAULT false)`;
 db.query(createUserTableCommand, function (err, res) {
 	if (err) {
-		console.log('Error: ', err);
+		console.log('Error: ',  err.sqlMessage || err.message || err);
 		return;
 	}
 	if (!res.warningCount) console.log('User table successfully created.');
@@ -12,8 +12,7 @@ db.query(createUserTableCommand, function (err, res) {
 
 //Constructor
 class User{
-	constructor(id, email, first_name, last_name, password, phone_number, address, is_admin){
-		this.id = id;
+	constructor( email, first_name, last_name, password, phone_number, address, is_admin){
 		this.email = email;
 		this.first_name = first_name;
 		this.last_name = last_name;
@@ -32,8 +31,7 @@ class User{
 				return;
 			}
 			console.log("New user created successfully!");
-			newUser.id = res.insertId || null;
-			result(null, { status: "success", data: {...newUser, is_admin: newUser.is_admin || false }});
+			result(null, { status: "success", data: {id: res.insertId, ...newUser, is_admin: newUser.is_admin || false }});
 		})
 	}
 

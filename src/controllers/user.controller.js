@@ -36,7 +36,7 @@ exports.signUp = (req, res) => {
 		const hash = bcrypt.hashSync(password, salt);
 
 		// create a user
-		const user = new User(null, email, first_name, last_name, hash, phone_number, address, is_admin);
+		const user = new User( email, first_name, last_name, hash, phone_number, address, is_admin);
 
 		// save user to database
 		User.create(user, (err, data) => {
