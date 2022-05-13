@@ -1,14 +1,6 @@
 const db = require('../config/db.config');
-
-// create user table if it does not exist
-const createUserTableCommand = `CREATE TABLE IF NOT EXISTS users(id INT AUTO_INCREMENT PRIMARY KEY NOT NULL, email VARCHAR(100) NOT NULL UNIQUE, first_name VARCHAR(100) NOT NULL, last_name VARCHAR(100) NOT NULL, password VARCHAR(255) NOT NULL, phone_number VARCHAR(15)NOT NULL UNIQUE, address VARCHAR(255) NOT NULL, is_admin BOOLEAN DEFAULT false)`;
-db.query(createUserTableCommand, function (err, res) {
-	if (err) {
-		console.log('An error occured while trying to create users table: ',  err.sqlMessage || err.message || err);
-		return;
-	}
-	if (!res.warningCount) console.log('Users table successfully created.');
-});
+require('../database/scripts/userTableUp');
+const { createNewUser, getByIdentifier } = require('../database/queries');
 
 //Constructor
 class User{
@@ -24,7 +16,7 @@ class User{
 
 	// create
 	static create(newUser, result) {
-		db.query(`INSERT INTO users VALUES(0,?,?,?,?,?,?,?)`, [newUser.email, newUser.first_name, newUser.last_name, newUser.password, newUser.phone, newUser.address, newUser.is_admin || false], (err, res) => {
+		db.query(createNewUser, [newUser.email, newUser.first_name, newUser.last_name, newUser.password, newUser.phone, newUser.address, newUser.is_admin || false], (err, res) => {
 			if (err) {
 				console.log('Error: ', err.sqlMessage || err.message);
 				result({ status: "error", message: err.sqlMessage || err.message }, null);
@@ -37,7 +29,7 @@ class User{
 
 	// get all
 	static getAll(result) {
-		db.query(`SELECT * FROM users`, (err, res) => {
+		db.query(getByIdentifier('users'), (err, res) => {
 			if (err) {
 				console.log('Error: ', err.sqlMessage || err.message);
 				result({ status: "error", message: err.sqlMessage || err.message }, null);
@@ -52,7 +44,7 @@ class User{
 
 	// find by email
 	static findByEmail(email, result) {
-		db.query(`SELECT * FROM users WHERE email = ?`, [email], (err, res) => {
+		db.query(getByIdentifier('users', 'email'), [email], (err, res) => {
 			if (err) {
 				console.log('Error: ', err.sqlMessage || err.message);
 				result({ status: "error", message: err.sqlMessage || err.message }, null);
@@ -71,7 +63,7 @@ class User{
 
 	// find by phone_number
 	static findByPhoneNumber(phone_number, result) {
-		db.query(`SELECT * FROM users WHERE phone_number = ?`, [phone_number], (err, res) => {
+		db.query(getByIdentifier('users', 'phone_number'), [phone_number], (err, res) => {
 			if (err) {
 				console.log('Error: ', err.sqlMessage || err.message);
 				result({ status: "error", message: err.sqlMessage || err.message }, null);
@@ -131,7 +123,7 @@ class User{
 
 	// find by id
 	static findById(id, result) {
-		db.query(`SELECT * FROM users WHERE id = ?`,[id], (err, res) => {
+		db.query(getByIdentifier('users', 'id'),[id], (err, res) => {
 			if (err) {
 				console.log('Error: ', err.sqlMessage || err.message || err);
 				result({ status: "error", message: err.sqlMessage || err.message }, null);

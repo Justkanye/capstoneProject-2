@@ -21,6 +21,14 @@ require('./src/routes/user.routes')(app);
 // property routes
 require('./src/routes/property.routes')(app);
 
+app.use((err, req, res, next) => {
+    res.status(err.statusCode || 500).send({
+        status: "error",
+        message: err.message
+    });
+    next();
+});
+
 const PORT = process.env.SERVER_PORT || 5000;
 app.listen(PORT, () => {
 	console.log(`Server running on port ${PORT}`);
