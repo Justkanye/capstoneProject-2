@@ -53,6 +53,19 @@ exports.getById = (req, res) => {
 };
 
 // Find all properties of specific type
+exports.getByType = (req, res) => {
+	const type = req.query.type;
+	Property.findByType(type,(err, data) => {
+			if (err) {
+				res.status(500).send({
+					status: "error",
+					error: err.message || "Unable to find properties"
+				});
+			} else {
+			res.send(data);
+		}
+	});
+};
 
 // Update a property identified by id in the request
 exports.update = (req, res) => {
@@ -95,16 +108,49 @@ exports.updateStatus = (req, res) => {
 // Delete a property identified by id in the request
 exports.delete = (req, res) => {
 	const propertyId = req.params.propertyId;
-	Property.deletePropertyById(propertyId,(err, data) => {
+	Property.findById(propertyId,(err, data) => {
+			if (err) {
+				if (err.kind) {
+					res.status(404).send({
+						status: "error",
+						error: "Property not found"
+					});
+					return;
+				} else {
+					res.status(500).send({
+						status:"error",
+						error: err.message || "Unable to find property"
+					});
+					return;
+				}
+			} else {
+				console.log('else block');
+				Property.deletePropertyById(propertyId,(err2, data2) => {
+						if (err2) {
+							res.status(500).send({
+								status: "error",
+								error: err.message || "Unable to delete property"
+							});
+							return;
+						} else {
+						res.send(data);
+					};
+				});
+			}
+	});
+};
+
+// Find all properties of created by a specific user (optional)
+exports.findByOwner = (req, res) => {
+	const owner = req.params.userId;
+	Property.findPropertyByOwner(owner,(err, data) => {
 			if (err) {
 				res.status(500).send({
 					status: "error",
-					error: err.message || "Unable to delete property"
+					error: err.message || `Unable to find properties by user with id ${owner}.`
 				});
 			} else {
 			res.send(data);
 		}
 	});
 };
-
-// Find all properties of created by a specific user (optional)

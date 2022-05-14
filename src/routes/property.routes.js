@@ -7,10 +7,11 @@ module.exports = app => {
 	// get all properties
 	router.get('/', propertyController.getAll);
 
-	// get property by id
-	router.get('/:propertyId', propertyController.getById);
+	// get properties by type
+	router.get('/search', propertyController.getByType);
 
-	router.get('/search', validateToken, propertyController.create);
+	// get properties by owner
+	router.get('/owner/:userId', propertyController.findByOwner);
 
 	// create a new property
 	router.post('/', validateToken, propertyController.create);
@@ -23,6 +24,9 @@ module.exports = app => {
 
 	// delete property by id
 	router.delete('/:propertyId', validateToken, isPropertyOwner, propertyController.delete);
+
+	// get property by id
+	router.get('/:propertyId', propertyController.getById);
 
 	app.use('/api/v1/property', router);
 };

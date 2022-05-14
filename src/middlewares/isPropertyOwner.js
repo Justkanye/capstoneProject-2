@@ -5,6 +5,13 @@ const isPropertyOwner = (req, res, next) => {
 	const propertyId = req.params.propertyId;
 	Property.findById(propertyId,(err, data) => {
 			if (err) {
+				if (err.kind) {
+					res.status(404).send({
+						status: "error",
+						error: "Property not found"
+					});
+					return;
+				}
 				res.status(500).send({
 					status: "error",
 					error: err.message || "Unable to find property"
@@ -16,9 +23,10 @@ const isPropertyOwner = (req, res, next) => {
 					error: "You are not authorized to modify this property"
 				});
 				return;
+			} else {
+				next();
 			}
 		});
-	next();
 };
 
 module.exports = isPropertyOwner;

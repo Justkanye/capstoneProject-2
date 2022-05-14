@@ -54,7 +54,6 @@ class Property{
 	//delete
 	static deletePropertyById(id, result) {
 		db.query(deletePropertyQuery, [id], (err, res) => {
-			console.log('deleted: ', res);
 			if (err) {
 				console.log('Error: ', err.sqlMessage || err.message);
 				result({ status: "error", message: err.sqlMessage || err.message }, null);
@@ -73,7 +72,7 @@ class Property{
 				result({ status: "error", message: err.sqlMessage || err.message }, null);
 				return;
 			}
-			console.log('Found properties: ', res);
+			console.log(`Found ${res.length} properties`);;
 			result(null, { status: "success", data: res });
 			return;	
 		});
@@ -88,7 +87,7 @@ class Property{
 				return;
 			}
 
-			console.log('Found properties: ', res);
+			console.log(`Found ${res.length} properties`);
 			result(null, { status: "success", data: res });
 			return;	
 		});
@@ -102,10 +101,35 @@ class Property{
 				result({ status: "error", message: err.sqlMessage || err.message }, null);
 				return;
 			}
+			if (res[0]) {
+				console.log('Found property: ', res[0]);
+				result(null, { status: "success", data: res[0] });
+				return;
+			}
 
-			console.log('Found property: ', res[0]);
-			result(null, { status: "success", data: res[0] });
-			return;	
+			// not found	
+			result({ kind:"not found" }, null);
+			return;
+		});
+	};
+
+	// find by user
+	static findPropertyByOwner(owner, result) {
+		db.query(getByIdentifier('properties', 'owner'),[owner], (err, res) => {
+			if (err) {
+				console.log('Error: ', err.sqlMessage || err.message || err);
+				result({ status: "error", message: err.sqlMessage || err.message }, null);
+				return;
+			}
+			if (res) {
+				console.log(`Found ${res.length} properties`);
+				result(null, { status: "success", data: res });
+				return;
+			}
+
+			// not found	
+			result({ kind:"not found" }, null);
+			return;
 		});
 	};
 };
