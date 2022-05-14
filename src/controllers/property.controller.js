@@ -40,9 +40,7 @@ exports.getAll = (req, res) => {
 // Find a single property by id
 exports.getById = (req, res) => {
 	const propertyId = req.params.propertyId;
-	console.log('propertyId: ',propertyId);
 	Property.findById(propertyId,(err, data) => {
-		//console.log('data: ',data);
 			if (err) {
 				res.status(500).send({
 					status: "error",
@@ -51,7 +49,7 @@ exports.getById = (req, res) => {
 			} else {
 			res.send(data);
 		}
-	})
+	});
 };
 
 // Find all properties of specific type
@@ -95,5 +93,18 @@ exports.updateStatus = (req, res) => {
 };
 
 // Delete a property identified by id in the request
+exports.delete = (req, res) => {
+	const propertyId = req.params.propertyId;
+	Property.deletePropertyById(propertyId,(err, data) => {
+			if (err) {
+				res.status(500).send({
+					status: "error",
+					error: err.message || "Unable to delete property"
+				});
+			} else {
+			res.send(data);
+		}
+	});
+};
 
 // Find all properties of created by a specific user (optional)

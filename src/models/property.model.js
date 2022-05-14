@@ -54,7 +54,7 @@ class Property{
 	//delete
 	static deletePropertyById(id, result) {
 		db.query(deletePropertyQuery, [id], (err, res) => {
-			console.log(res);
+			console.log('deleted: ', res);
 			if (err) {
 				console.log('Error: ', err.sqlMessage || err.message);
 				result({ status: "error", message: err.sqlMessage || err.message }, null);

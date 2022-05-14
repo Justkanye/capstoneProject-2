@@ -21,7 +21,8 @@ module.exports = app => {
 	// update a property's status to sold
 	router.patch('/:propertyId/sold', validateToken, isPropertyOwner, propertyController.updateStatus);
 
-	router.delete('/:propertyId', validateToken, isPropertyOwner, propertyController.create);
+	// delete property by id
+	router.delete('/:propertyId', validateToken, isPropertyOwner, propertyController.delete);
 
 	app.use('/api/v1/property', router);
 };

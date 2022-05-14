@@ -13,7 +13,7 @@ const isPropertyOwner = (req, res, next) => {
 			} else if (data.data.owner != userId) {
 				res.status(403).send({
 					status: "error",
-					error: "You are not authorized to update this property"
+					error: "You are not authorized to modify this property"
 				});
 				return;
 			}
