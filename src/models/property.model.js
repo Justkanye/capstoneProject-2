@@ -1,12 +1,11 @@
 const db = require('../config/db.config');
 require('../database/scripts/propertyTableUp');
-const { createNewProperty, getByIdentifier, updatePropertyQuery, deletePropertyQuery } = require('../database/queries');
+const { createNewProperty, getByIdentifier, updatePropertyQuery, deletePropertyQuery, updatePropertyStatusQuery } = require('../database/queries');
 
 //Constructor
 class Property{
-	constructor( owner, status, price, state, city, address, type, image_url){
+	constructor( owner, price, state, city, address, type, image_url){
 		this.owner = owner;
-		this.status = status;
 		this.price = price;
 		this.state = state;
 		this.city = city;
@@ -30,21 +29,25 @@ class Property{
 
 	//update
 	static updatePropertyById(id, property, result) {
-		db.query(updatePropertyQuery, [property.status, property.price, property.state, property.city, property.address, property.type, id], (err, res) => {
-			console.log(res);
+		db.query(updatePropertyQuery, [property.price, property.state, property.city, property.address, property.type, id], (err, res) => {
 			if (err) {
 				console.log('Error: ', err.sqlMessage || err.message);
 				result({ status: "error", message: err.sqlMessage || err.message }, null);
 				return;
 			};
-			if (res.length) {
-				console.log('Found property: ', res[0]);
-				result(null, { status: "success", data: res[0] });
-				return;	
-			};
+			this.findById(id, result);
+		});
+	};
 
-			// not found
-			result({ status: "error", message: "Not found" }, null );
+	//update status
+	static updatePropertyStatusById(id, result) {
+		db.query(updatePropertyStatusQuery, [id], (err, res) => {
+			if (err) {
+				console.log('Error: ', err.sqlMessage || err.message);
+				result({ status: "error", message: err.sqlMessage || err.message }, null);
+				return;
+			};
+			this.findById(id, result);
 		});
 	};
 
@@ -101,7 +104,7 @@ class Property{
 			}
 
 			console.log('Found property: ', res[0]);
-			result(null, { status: "success", data: res[0]});
+			result(null, { status: "success", data: res[0] });
 			return;	
 		});
 	};

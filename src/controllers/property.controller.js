@@ -8,27 +8,91 @@ exports.create = (req, res) => {
 			message: "Content cannot be empty!"
 		});
 	};
-	const { status, price, state, city, address, type, image_url } = req.body;
-	const newProperty = new Property ( 9, status, price, state, city, address, type, image_url);
+	const { price, state, city, address, type, image_url } = req.body;
+	const newProperty = new Property ( req.user.id, price, state, city, address, type, image_url);
 
 	Property.create(newProperty, (err, data) => {
 		if (err) {
 			res.status(500).send({
 				status: "error",
-				error: err.sqlMessage || err.message || err|| "Some error occured"
+				error: err.message || "Unable to create property"
 			});
 		} else {
 			res.send(data);
 	}
 });
 };
+
 // Retrieve all properties from database
+exports.getAll = (req, res) => {
+	Property.getAll((err, data) => {
+		if (err) {
+			res.status(500).send({
+				status: "error",
+				error: err.message || "Unable to fetch properties"
+			});
+		} else {
+			res.send(data);
+		}
+	});
+};
 
 // Find a single property by id
+exports.getById = (req, res) => {
+	const propertyId = req.params.propertyId;
+	console.log('propertyId: ',propertyId);
+	Property.findById(propertyId,(err, data) => {
+		//console.log('data: ',data);
+			if (err) {
+				res.status(500).send({
+					status: "error",
+					error: err.message || "Unable to find property"
+				});
+			} else {
+			res.send(data);
+		}
+	})
+};
 
 // Find all properties of specific type
 
 // Update a property identified by id in the request
+exports.update = (req, res) => {
+	if (!req.body) {
+		res.status(400).send({
+			status: "error",
+			message: "Content cannot be empty!"
+		});
+	};
+	const propertyId = req.params.propertyId;
+	const { price, state, city, address, type, image_url } = req.body;
+	const newProperty = new Property ( req.user.id, price, state, city, address, type, image_url);
+	Property.updatePropertyById(propertyId, newProperty, (err, data) => {
+		if (err) {
+			res.status(500).send({
+				status: "error",
+				error: err.message || "Unable to update property"
+			});
+		} else {
+			res.send(data);
+		}
+	});
+};
+
+// update property status
+exports.updateStatus = (req, res) => {
+	const propertyId = req.params.propertyId;
+	Property.updatePropertyStatusById(propertyId, (err, data) => {
+		if (err) {
+			res.status(500).send({
+				status: "error",
+				error: err.message || "Unable to update property"
+			});
+		} else {
+			res.send(data);
+		}
+	});
+};
 
 // Delete a property identified by id in the request
 

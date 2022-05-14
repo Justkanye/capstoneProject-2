@@ -40,7 +40,10 @@ const createNewUser = `INSERT INTO users VALUES(0,?,?,?,?,?,?,?)`;
 const createNewProperty = `INSERT INTO properties(owner, price, state, city, address, type, image_url) VALUES(?,?,?,?,?,?,?)`;
 
 // update property by id
-const updatePropertyQuery = `UPDATE properties SET status = ?, price = ?, state = ?, city = ?, address = ?, type = ? WHERE id = ?`;
+const updatePropertyQuery = `UPDATE properties SET price = ?, state = ?, city = ?, address = ?, type = ? WHERE id = ?`;
+
+// update property status by id
+const updatePropertyStatusQuery = `UPDATE properties SET status = "sold" WHERE id = ?`;
 
 // delete property by id
 const deletePropertyQuery = `DELETE FROM properties WHERE id = ?`; 
@@ -63,5 +66,6 @@ module.exports = {
     createNewProperty,
     updatePropertyQuery,
     deletePropertyQuery,
+    updatePropertyStatusQuery,
     getByIdentifier
 };
