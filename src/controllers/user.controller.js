@@ -175,7 +175,7 @@ exports.resetPassword = (req, res)=> {
 			} else if (!(comparePassword(current_password, data.data.password))) {
 				res.status(400).send({
 					status: "error",
-					error: "Invalid username or password"
+					error: "Invalid email or password"
 				});
 			} else {
 				// update password
@@ -204,7 +204,7 @@ exports.resetPassword = (req, res)=> {
 			} else if (!(comparePassword(current_password, data.data.password))) {
 				res.status(400).send({
 					status: "error",
-					error: "Invalid username or password"
+					error: "Invalid phone number or password"
 				});
 			} else {
 				// update password

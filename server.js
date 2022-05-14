@@ -11,6 +11,8 @@ app.use(cors());
 // parse requests of content-type - application/json
 app.use(express.json());
 
+app.use(express.urlencoded({extended:false}));
+
 app.get('/', (req, res) => {
 	res.json({message: "Welcome to Group 14's SideHustle NodeJs capsone project 2 REST API"})
 });

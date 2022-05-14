@@ -6,7 +6,10 @@ const {
     DB_PASS,
     DB_NAME,
     DB_PORT,
-    JWT_SECRET_KEY
+    JWT_SECRET_KEY,
+    CLOUDINARY_API_SECRET,
+    CLOUDINARY_API_KEY,
+    CLOUDINARY_CLOUD_NAME
 } = process.env;
 
 const requiredCredentials = [
@@ -14,7 +17,10 @@ const requiredCredentials = [
     'DB_USER',
     'DB_PASS',
     'DB_NAME',
-    'JWT_SECRET_KEY'
+    'JWT_SECRET_KEY',
+    'CLOUDINARY_API_SECRET',
+    'CLOUDINARY_API_KEY',
+    'CLOUDINARY_CLOUD_NAME'
 ];
 
 for (const credential of requiredCredentials) {
@@ -30,5 +36,8 @@ module.exports = {
     DB_PASS,
     DB_NAME,
     DB_PORT,
-    JWT_SECRET_KEY
+    JWT_SECRET_KEY,
+    CLOUDINARY_API_SECRET,
+    CLOUDINARY_API_KEY,
+    CLOUDINARY_CLOUD_NAME
 };

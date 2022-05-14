@@ -35,7 +35,7 @@ class User{
 				result({ status: "error", message: err.sqlMessage || err.message }, null);
 				return;
 			}
-
+			res.forEach(result => delete result.password);
 			console.log('Found users: ', res);
 			result(null, { status: "success", data: res});
 			return;	
@@ -51,7 +51,7 @@ class User{
 				return;
 			};
 			if (res.length) {
-				console.log('Found user: ', res[0]);
+				console.log('Found user');
 				result(null, { status: "success", data: res[0]});
 				return;	
 			};
@@ -70,7 +70,7 @@ class User{
 				return;
 			};
 			if (res.length) {
-				console.log('Found user: ', res[0]);
+				console.log('Found user');
 				result(null, res[0]);
 				return;	
 			};
@@ -90,6 +90,7 @@ class User{
 				return;
 			};
 			if (res.length) {
+				delete res[0].password;
 				console.log('Found user: ', res[0]);
 				result(null, { status: "success", data: res[0]});
 				return;	
@@ -103,13 +104,13 @@ class User{
 	// Password reset for user identified by phone_number
 	static updatePasswordByPhoneNumber(phone_number, password, result) {
 		db.query(`UPDATE users SET password = ? WHERE phone_number = ?`, [password, phone_number], (err, res) => {
-			console.log(res);
 			if (err) {
 				console.log('Error: ', err.sqlMessage || err.message);
 				result({ status: "error", message: err.sqlMessage || err.message }, null);
 				return;
 			};
 			if (res.length) {
+				delete res[0].password;
 				console.log('Found user: ', res[0]);
 				result(null, { status: "success", data: res[0]});
 				return;	
@@ -129,9 +130,14 @@ class User{
 				result({ status: "error", message: err.sqlMessage || err.message }, null);
 				return;
 			}
-
-			console.log('Found user: ', res[0]);
-			result(null, { status: "success", data: res[0]});
+			if (res[0]) {
+				delete res[0].password;
+				console.log('Found user: ', res[0]);
+				result(null, { status: "success", data: res[0]});
+				return;
+			}
+			// not found
+			result({ status: "error", message: "Not found" }, null );
 			return;	
 		})
 	}

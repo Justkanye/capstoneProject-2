@@ -1,15 +1,22 @@
 const Property = require('../models/property.model');
+const cloudinary = require("../utils/cloudinary");
+const upload = require("../utils/multer");
 
 // Create and save a new property
-exports.create = (req, res) => {
+exports.create = async (req, res) => {
 	if (!req.body) {
 		res.status(400).send({
 			status: "error",
 			message: "Content cannot be empty!"
 		});
 	};
-	const { price, state, city, address, type, image_url } = req.body;
-	const newProperty = new Property ( req.user.id, price, state, city, address, type, image_url);
+	try {
+    // Upload image to cloudinary
+    console.log('request.body: ',req.body);
+    console.log('request.file: ',req.file);
+    const result = await cloudinary.uploader.upload(req.file.path);
+    const { price, state, city, address, type } = req.body;
+	const newProperty = new Property ( req.user.id, price, state, city, address, type, result.secure_url);
 
 	Property.create(newProperty, (err, data) => {
 		if (err) {
@@ -21,6 +28,13 @@ exports.create = (req, res) => {
 			res.send(data);
 	}
 });
+  } catch (err) {
+    console.log(err);
+    res.status(500).send({
+		status: "error",
+		error: err.message || "Some error occured"
+	});
+  }
 };
 
 // Retrieve all properties from database
@@ -150,7 +164,7 @@ exports.findByOwner = (req, res) => {
 					error: err.message || `Unable to find properties by user with id ${owner}.`
 				});
 			} else {
-			res.send(data);
-		}
+				res.send(data);
+			}
 	});
 };

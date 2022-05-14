@@ -2,6 +2,7 @@ const router = require('express').Router();
 const propertyController = require('../controllers/property.controller');
 const validateToken = require('../middlewares/validateToken');
 const isPropertyOwner = require('../middlewares/isPropertyOwner');
+const upload = require("../utils/multer");
 
 module.exports = app => {
 	// get all properties
@@ -14,7 +15,7 @@ module.exports = app => {
 	router.get('/owner/:userId', propertyController.findByOwner);
 
 	// create a new property
-	router.post('/', validateToken, propertyController.create);
+	router.post('/', validateToken, upload.single("image"), propertyController.create);
 
 	// update a property
 	router.patch('/:propertyId', validateToken, isPropertyOwner, propertyController.update);
