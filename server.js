@@ -11,7 +11,7 @@ app.use(cors());
 // parse requests of content-type - application/json
 app.use(express.json());
 
-app.use(express.urlencoded({extended:false}));
+app.use(express.urlencoded({extended:true}));
 
 app.get('/', (req, res) => {
 	res.json({message: "Welcome to Group 14's SideHustle NodeJs capsone project 2 REST API"})
@@ -22,6 +22,9 @@ require('./src/routes/user.routes')(app);
 
 // property routes
 require('./src/routes/property.routes')(app);
+
+// report routes
+require('./src/routes/report.routes')(app);
 
 app.use((err, req, res, next) => {
     res.status(err.statusCode || 500).send({
