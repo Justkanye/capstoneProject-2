@@ -18,7 +18,7 @@
 14. User can view all reports // admin account required
 15. User can view a specific report // admin account required
 16. User can view all reports on a specific property advert // admin account required
-17. Amins can delete a report
+17. Admins can delete a report
 
 ## API endpoints
 
