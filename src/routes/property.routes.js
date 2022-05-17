@@ -25,7 +25,6 @@ module.exports = (app) => {
     "/",
     asyncHandler(upload.array("image")),
     asyncHandler(validateToken),
-    asyncHandler(isAdmin),
     createValidator,
     asyncHandler(propertyController.create)
   );

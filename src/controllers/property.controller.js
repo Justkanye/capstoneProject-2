@@ -13,8 +13,6 @@ exports.create = async (req, res) => {
   }
   try {
     // Upload image to cloudinary
-    console.log("request.body: ", req.body);
-    console.log("request.files: ", req.files);
     const files = req.files;
     const urls = [];
     for (const file of files) {
@@ -45,7 +43,6 @@ exports.create = async (req, res) => {
       }
     });
   } catch (err) {
-    console.log(err);
     res.status(500).send({
       status: "error",
       error:
@@ -114,7 +111,6 @@ exports.update = (req, res) => {
       message: "Content cannot be empty!",
     });
   }
-  console.log("request.body: ", req.body);
   const propertyId = req.params.propertyId;
   const { price, state, city, address, type } = req.body;
   const newProperty = new Property(
@@ -186,7 +182,6 @@ exports.delete = (req, res) => {
         return;
       }
     } else {
-      console.log("else block");
       Property.deletePropertyById(propertyId, (err2, data2) => {
         if (err2) {
           res.status(500).send({

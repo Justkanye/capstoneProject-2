@@ -41,7 +41,6 @@ class User {
       ],
       (err, res) => {
         if (err) {
-          console.log("Error: ", err.sqlMessage || err.message);
           result(
             { status: "error", message: err.sqlMessage || err.message },
             null
@@ -58,7 +57,6 @@ class User {
   static getAll(result) {
     db.query(getByIdentifier("users"), (err, res) => {
       if (err) {
-        console.log("Error: ", err.sqlMessage || err.message);
         result(
           { status: "error", message: err.sqlMessage || err.message },
           null
@@ -66,7 +64,7 @@ class User {
         return;
       }
       res.forEach((result) => delete result.password);
-      console.log("Found users: ", res);
+      console.log(`Found ${res.length} users`);
       result(null, { status: "success", data: res });
       return;
     });
@@ -76,7 +74,6 @@ class User {
   static findByEmail(email, result) {
     db.query(getByIdentifier("users", "email"), [email], (err, res) => {
       if (err) {
-        console.log("Error: ", err.sqlMessage || err.message);
         result(
           { status: "error", message: err.sqlMessage || err.message },
           null
@@ -101,7 +98,6 @@ class User {
       [phone_number],
       (err, res) => {
         if (err) {
-          console.log("Error: ", err.sqlMessage || err.message);
           result(
             { status: "error", message: err.sqlMessage || err.message },
             null
@@ -126,9 +122,7 @@ class User {
       `UPDATE users SET password = ? WHERE email = ?`,
       [password, email],
       (err, res) => {
-        console.log(res);
         if (err) {
-          console.log("Error: ", err.sqlMessage || err.message);
           result(
             { status: "error", message: err.sqlMessage || err.message },
             null
@@ -138,7 +132,7 @@ class User {
         if (res.length) {
           const user = res[0];
           delete user.password;
-          console.log("Found user: ", user);
+          console.log("Found user");
           result(null, { status: "success", data: user });
           return;
         }
@@ -156,7 +150,6 @@ class User {
       [password, phone_number],
       (err, res) => {
         if (err) {
-          console.log("Error: ", err.sqlMessage || err.message);
           result(
             { status: "error", message: err.sqlMessage || err.message },
             null
@@ -166,7 +159,7 @@ class User {
         if (res.length) {
           const user = res[0];
           delete user.password;
-          console.log("Found user: ", user);
+          console.log("Found user");
           result(null, { status: "success", data: user });
           return;
         }
@@ -182,7 +175,6 @@ class User {
   static findById(id, result) {
     db.query(getByIdentifier("users", "id"), [id], (err, res) => {
       if (err) {
-        console.log("Error: ", err.sqlMessage || err.message || err);
         result(
           { status: "error", message: err.sqlMessage || err.message },
           null
@@ -192,7 +184,7 @@ class User {
       if (res[0]) {
         const user = res[0];
         delete user.password;
-        console.log("Found user: ", user);
+        console.log("Found user");
         result(null, { status: "success", data: user });
         return;
       }
@@ -216,7 +208,6 @@ class User {
       ],
       (err, res) => {
         if (err) {
-          console.log("Error: ", err.sqlMessage || err.message);
           result(
             { status: "error", message: err.sqlMessage || err.message },
             null

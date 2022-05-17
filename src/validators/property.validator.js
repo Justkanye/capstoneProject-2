@@ -2,7 +2,6 @@ const Joi = require("joi");
 const validatorHandler = require("../middlewares/validatorHandler");
 
 const create = (req, res, next) => {
-  console.log("req.body", req.body);
   const schema = Joi.object().keys({
     price: Joi.number().required(),
     state: Joi.string().min(10).max(50).required(),
@@ -14,7 +13,6 @@ const create = (req, res, next) => {
 };
 
 const update = (req, res, next) => {
-  console.log("req.body", req.body);
   const schema = Joi.object().keys({
     price: Joi.number().required(),
     state: Joi.string().min(10).max(50).required(),

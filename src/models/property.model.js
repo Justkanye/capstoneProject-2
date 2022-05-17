@@ -35,7 +35,6 @@ class Property {
       ],
       (err, res) => {
         if (err) {
-          console.log("Error: ", err.sqlMessage || err.message);
           result(
             { status: "error", message: err.sqlMessage || err.message },
             null
@@ -62,7 +61,6 @@ class Property {
       ],
       (err, res) => {
         if (err) {
-          console.log("Error: ", err.sqlMessage || err.message);
           result(
             { status: "error", message: err.sqlMessage || err.message },
             null
@@ -78,7 +76,6 @@ class Property {
   static updatePropertyStatusById(id, result) {
     db.query(updatePropertyStatusQuery, [id], (err, res) => {
       if (err) {
-        console.log("Error: ", err.sqlMessage || err.message);
         result(
           { status: "error", message: err.sqlMessage || err.message },
           null
@@ -93,7 +90,6 @@ class Property {
   static deletePropertyById(id, result) {
     db.query(deletePropertyQuery, [id], (err, res) => {
       if (err) {
-        console.log("Error: ", err.sqlMessage || err.message);
         result(
           { status: "error", message: err.sqlMessage || err.message },
           null
@@ -109,7 +105,6 @@ class Property {
   static getAll(result) {
     db.query(getByIdentifier("properties"), (err, res) => {
       if (err) {
-        console.log("Error: ", err.sqlMessage || err.message || err);
         result(
           { status: "error", message: err.sqlMessage || err.message },
           null
@@ -126,7 +121,6 @@ class Property {
   static findByType(type, result) {
     db.query(getByIdentifier("properties", "type"), [type], (err, res) => {
       if (err) {
-        console.log("Error: ", err.sqlMessage || err.message || err);
         result(
           { status: "error", message: err.sqlMessage || err.message },
           null
@@ -144,7 +138,6 @@ class Property {
   static findById(id, result) {
     db.query(getByIdentifier("properties", "id"), [id], (err, res) => {
       if (err) {
-        console.log("Error: ", err.sqlMessage || err.message || err);
         result(
           { status: "error", message: err.sqlMessage || err.message },
           null
@@ -152,7 +145,7 @@ class Property {
         return;
       }
       if (res[0]) {
-        console.log("Found property: ", res[0]);
+        console.log("Found property");
         result(null, { status: "success", data: res[0] });
         return;
       }
@@ -167,7 +160,6 @@ class Property {
   static findPropertyByOwner(owner, result) {
     db.query(getByIdentifier("properties", "owner"), [owner], (err, res) => {
       if (err) {
-        console.log("Error: ", err.sqlMessage || err.message || err);
         result(
           { status: "error", message: err.sqlMessage || err.message },
           null

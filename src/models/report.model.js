@@ -20,7 +20,6 @@ class Report {
       [newReport.property_id, newReport.reason, newReport.description],
       (err, res) => {
         if (err) {
-          console.log("Error: ", err.sqlMessage || err.message);
           result(
             { status: "error", message: err.sqlMessage || err.message },
             null
@@ -37,7 +36,6 @@ class Report {
   static findById(id, result) {
     db.query(getByIdentifier("reports", "id"), [id], (err, res) => {
       if (err) {
-        console.log("Error: ", err.sqlMessage || err.message || err);
         result(
           { status: "error", message: err.sqlMessage || err.message },
           null
@@ -45,7 +43,7 @@ class Report {
         return;
       }
       if (res[0]) {
-        console.log("Found report: ", res[0]);
+        console.log("Found report");
         result(null, { status: "success", data: res[0] });
         return;
       }
@@ -62,7 +60,6 @@ class Report {
       [property_id],
       (err, res) => {
         if (err) {
-          console.log("Error: ", err.sqlMessage || err.message || err);
           result(
             { status: "error", message: err.sqlMessage || err.message },
             null
@@ -86,7 +83,6 @@ class Report {
   static getAll(result) {
     db.query(getByIdentifier("reports"), (err, res) => {
       if (err) {
-        console.log("Error: ", err.sqlMessage || err.message || err);
         result(
           { status: "error", message: err.sqlMessage || err.message },
           null
@@ -103,7 +99,6 @@ class Report {
   static deleteReportById(id, result) {
     db.query(deleteReportQuery, [id], (err, res) => {
       if (err) {
-        console.log("Error: ", err.sqlMessage || err.message);
         result(
           { status: "error", message: err.sqlMessage || err.message },
           null
